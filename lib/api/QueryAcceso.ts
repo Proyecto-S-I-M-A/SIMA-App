@@ -57,13 +57,4 @@ export const useGetAccesos = (id: string, enabled: boolean = true) => {
     enabled
   });
   return query;
-};
-
-const QueryAcceso = {
-  useCreateAccesoMutation,
-  useUpdateAccesoActivoMutation,
-  useUpdateAccesoMutation,
-  useGetAccesos,
-};
-
-export default QueryAcceso;
+}

@@ -49,10 +49,15 @@ export const useGetInventarios = (id: string, enabled: boolean = true) => {
   });
 };
 
-const QueryInventario = {
-  useCreateInventarioMutation,
-  useUpdateInventarioMutation,
-  useGetInventarios,
+export const useGetInventario = (id: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['inventario', id],
+    queryFn: async (): Promise<Inventario[]> => {
+      return apiJson<Inventario[]>(`/inventario/all`, {
+        method: 'GET',
+        auth: true,
+      });
+    },
+    enabled,
+  });
 };
-
-export default QueryInventario;

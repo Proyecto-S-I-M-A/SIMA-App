@@ -32,9 +32,15 @@ export const useGetUsuarios = (id: string, enabled: boolean = true) => {
   return query;
 };
 
-const QueryUsuario = {
-  useUpdateUsuarioMutation,
-  useGetUsuarios,
+export const useGetUsuario = (id_acceso: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ["usuario", id_acceso],
+    queryFn: async (): Promise<Usuario[]> => {
+      return apiJson<Usuario[]>(`/usuarios/acceso/${id_acceso}`, {
+        method: "GET",
+        auth: true,
+      });
+    },
+    enabled,
+  });
 };
-
-export default QueryUsuario;

@@ -48,11 +48,3 @@ export const useGetMaquinas = (id: string, enabled: boolean = true) => {
     enabled,
   });
 };
-
-const QueryMaquina = {
-  useCreateMaquinaMutation,
-  useUpdateMaquinaMutation,
-  useGetMaquinas,
-};
-
-export default QueryMaquina;
