@@ -1,5 +1,5 @@
+import type { Usuario, UsuarioUpdate } from "@/types/Usuario";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Usuario, UsuarioUpdate } from "~/types/Usuario";
 import { apiJson } from "../apiClient";
 
 export const useUpdateUsuarioMutation = () => {

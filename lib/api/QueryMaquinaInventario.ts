@@ -1,5 +1,5 @@
+import type { MaquinaInventario, MaquinaInventarioCreation, MaquinaInventarioUpdate } from '@/types/Inventario';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { MaquinaInventario, MaquinaInventarioCreation, MaquinaInventarioUpdate } from '~/types/Inventario';
 import { apiJson } from '../apiClient';
 
 export interface InventarioMaquinaItem {

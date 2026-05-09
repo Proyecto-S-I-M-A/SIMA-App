@@ -1,7 +1,7 @@
+import type { Receta, RecetaCreation, RecetaUpdate, RecetasDosisCreation } from '@/types/Receta';
+import type { RecetasYDosisResponse } from '@/types/RecetasYDosis';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Receta, RecetaCreation, RecetaUpdate, RecetasDosisCreation } from '~/types/receta';
 import { apiJson } from '../apiClient';
-import type { RecetasYDosisResponse } from '~/types/RecetasYDosis';
 
 export const useCreateRecetaMutation = () => {
   const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
+import type { Maquina, MaquinaCreation, MaquinaUpdate } from '@/types/Maquina';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Maquina, MaquinaCreation, MaquinaUpdate } from '~/types/Maquina';
 import { apiJson } from '../apiClient';
 
 export const useCreateMaquinaMutation = () => {

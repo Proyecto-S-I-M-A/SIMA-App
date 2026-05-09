@@ -1,5 +1,5 @@
+import type { Dosis, DosisCreation, DosisUpdate } from '@/types/Dosis';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Dosis, DosisCreation, DosisUpdate } from '~/types/Dosis';
 import { apiJson } from '../apiClient';
 
 export const useCreateDosisMutation = () => {

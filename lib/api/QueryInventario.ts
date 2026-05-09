@@ -1,5 +1,5 @@
+import type { Inventario, InventarioCreation, InventarioUpdate } from '@/types/Inventario';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Inventario, InventarioCreation, InventarioUpdate } from '~/types/Inventario';
 import { apiJson } from '../apiClient';
 
 export const useCreateInventarioMutation = () => {

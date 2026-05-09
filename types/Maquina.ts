@@ -21,11 +21,3 @@ export const MaquinaUpdateSchema = MaquinaCreationSchema.partial();
 export type Maquina = z.infer<typeof MaquinaSchema>;
 export type MaquinaCreation = z.infer<typeof MaquinaCreationSchema>;
 export type MaquinaUpdate = z.infer<typeof MaquinaUpdateSchema>;
-
-const MaquinaTypes = {
-  MaquinaSchema,
-  MaquinaCreationSchema,
-  MaquinaUpdateSchema,
-};
-
-export default MaquinaTypes;
