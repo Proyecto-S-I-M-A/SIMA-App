@@ -1,5 +1,5 @@
+import type { Acceso, AccesoCreation, AccesoUpdate } from "@/types/Acceso";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Acceso, AccesoCreation, AccesoUpdate } from "~/types/Acceso";
 import { apiJson } from "../apiClient";
 
 export type CreateAccesoResponse = { message: string; acceso: { id: string } };
@@ -57,13 +57,4 @@ export const useGetAccesos = (id: string, enabled: boolean = true) => {
     enabled
   });
   return query;
-};
-
-const QueryAcceso = {
-  useCreateAccesoMutation,
-  useUpdateAccesoActivoMutation,
-  useUpdateAccesoMutation,
-  useGetAccesos,
-};
-
-export default QueryAcceso;
+}

@@ -1,5 +1,5 @@
+import type { Dosis, DosisCreation, DosisUpdate } from '@/types/Dosis';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Dosis, DosisCreation, DosisUpdate } from '~/types/Dosis';
 import { apiJson } from '../apiClient';
 
 export const useCreateDosisMutation = () => {
@@ -49,10 +49,15 @@ export const useGetDosis = (id: string, enabled: boolean = true) => {
   });
 };
 
-const QueryDosis = {
-  useCreateDosisMutation,
-  useUpdateDosisMutation,
-  useGetDosis,
+export const useGetDosisByReceta = (id_receta: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['dosis', 'receta', id_receta],
+    queryFn: async (): Promise<Dosis[]> => {
+      return apiJson<Dosis[]>(`/dosis/receta/${id_receta}`, {
+        method: 'GET',
+        auth: true,
+      });
+    },
+    enabled,
+  });
 };
-
-export default QueryDosis;

@@ -1,4 +1,5 @@
 import type { Receta, RecetaCreation, RecetaUpdate, RecetasDosisCreation } from '@/types/Receta';
+import type { RecetasYDosisResponse } from '@/types/RecetasYDosis';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiJson } from '../apiClient';
 
@@ -67,11 +68,27 @@ export const useGetRecetas = (id: string, enabled: boolean = true) => {
   });
 };
 
-const QueryReceta = {
-  useCreateRecetaMutation,
-  useCreateRecetaWithDosisMutation,
-  useUpdateRecetaMutation,
-  useGetRecetas,
+export const useGetRecetasByCedula = (cedula: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['recetas', 'cliente', cedula],
+    queryFn: async (): Promise<Receta[]> => {
+      return apiJson<Receta[]>(`/recetas/cliente/${cedula}`, {
+        method: 'GET',
+      });
+    },
+    enabled,
+  });
 };
 
-export default QueryReceta;
+export const useGetRecetasYDosisByCedula = (cedula: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['recetas', 'dosis', 'cliente', cedula],
+    queryFn: async (): Promise<RecetasYDosisResponse> => {
+      return apiJson<RecetasYDosisResponse>(`/recetas/dosis/cliente/${cedula}`, {
+        method: 'GET',
+        auth: true,
+      });
+    },
+    enabled,
+  });
+};

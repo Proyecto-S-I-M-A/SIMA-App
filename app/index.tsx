@@ -1,8 +1,9 @@
-import { getAccessToken, saveSessionAuth } from "@/lib/GetCookie";
+import palette from "@/constants/theme";
+import { getAccessToken, getRefreshToken, getSessionId, saveSessionAuth } from "@/lib/GetCookie";
 import { useLoginMutation } from "@/lib/Query";
 import { LoginSchema, type LoginData } from "@/types/Login";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, type Href } from "expo-router";
+import { useFocusEffect, useRouter, type Href } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -17,18 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const palette = {
-  c50: "#EFF6FB",
-  c100: "#D5E6F1",
-  c300: "#A8C7DB",
-  c500: "#72A0C1",
-  c700: "#4E7899",
-  c900: "#1C3549",
-  white: "#FFFFFF",
-  danger: "#B94040",
-};
-
-const AUTH_HOME_ROUTE = "/(tabs)" as Href;
+const AUTH_HOME_ROUTE = "/(tabs)/home" as Href;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -46,12 +36,20 @@ export default function LoginScreen() {
       password: "",
     },
   });
-
+  useFocusEffect(() => {
+    async function logTokens() {
+      console.log(await getSessionId());
+      console.log(await getAccessToken());
+      console.log(await getRefreshToken());
+    }
+    void logTokens();
+  });
+ // Efecto para restaurar sesión al iniciar la app
   useEffect(() => {
     const restoreSession = async () => {
       const token = await getAccessToken();
       if (token) {
-        router.replace("/(tabs)");
+        router.replace(AUTH_HOME_ROUTE);
       }
       setBooting(false);
     };
@@ -85,7 +83,7 @@ export default function LoginScreen() {
       <View style={styles.bgOrbBottom} />
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.caption}>FarmaExpress</Text>
+          <Text style={styles.caption}>Sistema Inteligente Medicacion Asistida</Text>
           <Text style={styles.title}>Inicia sesion</Text>
           <Text style={styles.subtitle}>Accede con tu correo y contrasena para administrar tu operacion.</Text>
 

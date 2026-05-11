@@ -12,9 +12,3 @@ export function useQueryAll (endpoint:string) {
   });
   return {All};
 }
-
-const QueryAll = {
-  useQueryAll,
-};
-
-export default QueryAll;
