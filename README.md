@@ -1,50 +1,72 @@
-# Welcome to your Expo app 👋
+# SIMA-App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+SIMA-App (Sistema Inteligente de Medicacion Asistida) es una app movil creada con Expo y React Native. Usa ruteo por archivos con expo-router y React Query para consumo de API.
 
-## Get started
+## Tecnologia
 
-1. Install dependencies
+- Expo + React Native + TypeScript
+- expo-router para rutas
+- TanStack React Query para estado remoto
+- expo-secure-store para sesion
+
+## Instalacion y ejecucion
+
+1. Instalar dependencias
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Iniciar la app
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+Scripts utiles (ver [package.json](package.json)):
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- `npm run android`
+- `npm run ios`
+- `npm run web`
+- `npm run lint`
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Configuracion
 
-## Get a fresh project
+- API base en [app.json](app.json): `expo.extra.apiUrl`.
+- Alternativa por entorno: `EXPO_PRIVATE_API_URL` (reinicia Expo).
+- En emulador Android, `localhost` y `127.0.0.1` se mapean a `10.0.2.2` (ver [lib/apiClient.ts](lib/apiClient.ts)).
 
-When you're ready, run:
+## Rutas principales (expo-router)
 
-```bash
-npm run reset-project
-```
+- Login: [app/index.tsx](app/index.tsx) (ruta `/`).
+- Home: [app/(tabs)/home/index.tsx](app/(tabs)/home/index.tsx) (ruta `/(tabs)/home`).
+- Stack y providers: [app/_layout.tsx](app/_layout.tsx).
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Estructura del proyecto
 
-## Learn more
+- [app/](app/) pantallas y layouts (ruteo por archivos).
+- [components/](components/) UI reusable.
+- [hooks/](hooks/) logica de paginas.
+- [lib/](lib/) cliente API, auth y helpers.
+- [lib/api/](lib/api/) queries por dominio.
+- [constants/](constants/) tema y paleta.
+- [types/](types/) modelos y DTOs.
+- [config/](config/) configuracion de API.
+- [assets/](assets/) imagenes e iconos.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Archivos y funciones clave
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [lib/apiClient.ts](lib/apiClient.ts): `apiJson()` y refresh token.
+- [config/ApiConfig.ts](config/ApiConfig.ts): lectura de `apiUrl`.
+- [lib/GetCookie.ts](lib/GetCookie.ts): `getAccessToken`, `getRefreshToken`, `saveSessionAuth`, `clearSessionAuth`.
+- [lib/Query.ts](lib/Query.ts): hooks de mutacion (login, signup, crear cliente/usuario).
+- [lib/api/](lib/api/): hooks de consulta por dominio.
+- [hooks/useHome.ts](hooks/useHome.ts): agregados para home.
+- [constants/theme.ts](constants/theme.ts): paleta de colores.
 
-## Join the community
+## Guia de contribucion
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Mantener el tipado estricto y los tipos en [types/](types/).
+- Poner la logica de pantalla en [hooks/](hooks/) y UI en [components/](components/).
+- Usar `apiJson()` y los hooks de [lib/api/](lib/api/) para llamadas remotas.
+- Documentar nuevas pantallas, queries y endpoints al agregarlos.
