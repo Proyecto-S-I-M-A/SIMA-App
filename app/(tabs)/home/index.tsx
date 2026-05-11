@@ -84,8 +84,18 @@ export default function HomeTab() {
       >
         <DataCardHeader CantidadReceta={CantidadReceta} CantidadActiva={CantidadActiva} CantidadRetirada={CantidadRetirada} />
         <InputSearcher />
-        <RecetaCard />
-        <RecetaCard />
+          {data?.map((receta) => (
+            <RecetaCard
+              key={receta.id}
+              RecetaID={receta.id}
+              DoctorRemitente={receta.doctor_remitente || ""}
+              Paciente={cliente?.nombre + " " + cliente?.apellido}
+              FechaEmision={receta.createdAt}
+              Dosis={receta.dosis}
+              FechaExpiracion={receta.fecha}
+              RecetaEstado={receta.estado || ""}
+            />
+          ))}
       </ScrollView>
     </SafeAreaView>
   );

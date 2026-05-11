@@ -1,12 +1,6 @@
+import palette from "@/constants/theme";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Tabs } from "expo-router";
-
-
-const palette = {
-  c100: "#D5E6F1",
-  c500: "#72A0C1",
-  c900: "#1C3549",
-};
 
 export default function TabsLayout() {
   return (

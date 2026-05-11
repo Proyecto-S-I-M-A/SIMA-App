@@ -1,3 +1,4 @@
+import palette from "@/constants/theme";
 import { getAccessToken, getRefreshToken, getSessionId, saveSessionAuth } from "@/lib/GetCookie";
 import { useLoginMutation } from "@/lib/Query";
 import { LoginSchema, type LoginData } from "@/types/Login";
@@ -16,17 +17,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const palette = {
-  c50: "#EFF6FB",
-  c100: "#D5E6F1",
-  c300: "#A8C7DB",
-  c500: "#72A0C1",
-  c700: "#4E7899",
-  c900: "#1C3549",
-  white: "#FFFFFF",
-  danger: "#B94040",
-};
 
 const AUTH_HOME_ROUTE = "/(tabs)/home" as Href;
 

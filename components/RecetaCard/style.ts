@@ -40,7 +40,13 @@ const style = StyleSheet.create({
     paddingVertical: 7,
   },
   statusChipPending: {
-    backgroundColor: "#E6EEF8",
+    backgroundColor: "#F8E3CC",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+  statusChipRetirada: {
+    backgroundColor: "#FBE7DE",
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 7,
@@ -70,58 +76,6 @@ const style = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: palette.c900,
-  },
-  doseBlock: {
-    gap: 10,
-  },
-  doseTitle: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: palette.c900,
-  },
-  doseRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  doseTagPrimary: {
-    flex: 1,
-    backgroundColor: "#EDF6FB",
-    borderRadius: 18,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: palette.c100,
-  },
-  doseTagSoft: {
-    flex: 1,
-    backgroundColor: "#F1F5FA",
-    borderRadius: 18,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: palette.c100,
-  },
-  doseTagAccent: {
-    flex: 1,
-    backgroundColor: "#E8F2F7",
-    borderRadius: 18,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: palette.c100,
-  },
-  doseTagLabel: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: palette.c700,
-    marginBottom: 4,
-  },
-  doseTagValue: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: palette.c900,
-  },
-  instructions: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: palette.c700,
   },
 })
 
