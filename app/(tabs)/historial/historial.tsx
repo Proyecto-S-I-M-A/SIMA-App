@@ -1,3 +1,6 @@
+import DataCardHeader from "@/components/DataCardHeader/Component";
+import InputSearcher from "@/components/InputSearcher/Component";
+import RecetaCard from "@/components/RecetaCard/Component";
 import palette from "@/constants/theme";
 import useHome from "@/hooks/useHome";
 import { useGetClientes } from "@/lib/api/QueryCliente";
@@ -17,7 +20,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function HomeTab() {
+export default function HistorialTab() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [sessionID, setSessionID] = useState<string>("");
@@ -105,9 +108,24 @@ export default function HomeTab() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Text style={{ fontSize: 18, fontWeight: "600", color: palette.c900 }}>
-          Bienvenido, {cliente?.nombre || "Usuario"}
-        </Text>
+        <DataCardHeader
+          CantidadReceta={CantidadReceta}
+          CantidadActiva={CantidadActiva}
+          CantidadRetirada={CantidadRetirada}
+        />
+        <InputSearcher />
+        {data?.map((receta) => (
+          <RecetaCard
+            key={receta.id}
+            RecetaID={receta.id}
+            DoctorRemitente={receta.doctor_remitente || ""}
+            Paciente={cliente?.nombre + " " + cliente?.apellido}
+            FechaEmision={receta.createdAt}
+            Dosis={receta.dosis}
+            FechaExpiracion={receta.fecha}
+            RecetaEstado={receta.estado || ""}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

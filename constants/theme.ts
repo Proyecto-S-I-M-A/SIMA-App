@@ -1,5 +1,6 @@
 const palette = {
   c50: "#EFF6FB",
+  c50Translucent: "rgba(239, 246, 251, 0.88)",
   c100: "#D5E6F1",
   c200: "#BDD6E5",
   c300: "#A8C7DB",
@@ -8,7 +9,6 @@ const palette = {
   c900: "#1C3549",
   white: "#FFFFFF",
   danger: "#B94040",
-
 };
 
 export default palette;
