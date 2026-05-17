@@ -25,6 +25,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AUTH_HOME_ROUTE = "/(tabs)/home" as Href;
+const REGISTER_ROUTE = "/register" as Href;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -78,11 +79,7 @@ export default function LoginScreen() {
       throw new Error("La API no devolvio tokens validos");
     }
 
-    await saveSessionAuth({
-      accessToken,
-      refreshToken,
-      sessionId,
-    });
+    await saveSessionAuth(accessToken, refreshToken, sessionId);
 
     router.replace(AUTH_HOME_ROUTE);
   };
@@ -176,6 +173,16 @@ export default function LoginScreen() {
               ) : (
                 <Text style={styles.loginButtonText}>Entrar</Text>
               )}
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.registerButton,
+                pressed && styles.registerButtonPressed,
+              ]}
+              onPress={() => router.push(REGISTER_ROUTE)}
+            >
+              <Text style={styles.registerButtonText}>Crear cuenta</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -288,5 +295,19 @@ const styles = StyleSheet.create({
     color: palette.white,
     fontWeight: "800",
     fontSize: 16,
+  },
+  registerButton: {
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: palette.c300,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  registerButtonPressed: {
+    backgroundColor: palette.c50,
+  },
+  registerButtonText: {
+    color: palette.c700,
+    fontWeight: "700",
   },
 });
