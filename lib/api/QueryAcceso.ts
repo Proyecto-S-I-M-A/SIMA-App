@@ -7,7 +7,6 @@ export type CreateAccesoResponse = { message: string; acceso: { id: string } };
 export const useCreateAccesoMutation = () => {
   return useMutation({
     mutationFn: async (form: AccesoCreation): Promise<CreateAccesoResponse> => {
-      console.log("Creating acceso with form data:", form);
       return apiJson<CreateAccesoResponse>("/accesos", {
         method: "POST",
         body: form,
