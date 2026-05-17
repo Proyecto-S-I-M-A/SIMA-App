@@ -1,19 +1,19 @@
 import { Modal, Pressable, Text, View } from "react-native";
 import { styles } from "./style";
 
-type FeedbackSuccessProps = {
+type FeedbackErrorProps = {
   visible: boolean;
   title?: string;
   message?: string;
   onClose?: () => void;
 };
 
-export function FeedbackSuccess({
+export function FeedbackError({
   visible,
-  title = "Cuenta creada",
-  message = "Tu cuenta se creo de manera exitosa.",
+  title = "Cuenta existente",
+  message = "Ya existe una cuenta con este correo.",
   onClose,
-}: FeedbackSuccessProps) {
+}: FeedbackErrorProps) {
   return (
     <Modal
       animationType="fade"
@@ -25,7 +25,7 @@ export function FeedbackSuccess({
         <Pressable style={styles.backdrop} onPress={onClose} />
         <View style={styles.container}>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>OK</Text>
+            <Text style={styles.badgeText}>!</Text>
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>

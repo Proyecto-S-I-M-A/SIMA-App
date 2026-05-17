@@ -1,3 +1,5 @@
+import { FeedbackError } from "@/components/FeedbackError/Component";
+import { FeedbackSuccess } from "@/components/FeedbackSuccess/Component";
 import palette from "@/constants/theme";
 import { useCreateAccesoMutation } from "@/lib/api/QueryAcceso";
 import { saveSessionAuth } from "@/lib/GetCookie";
@@ -22,6 +24,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const LOGIN_ROUTE = "/" as Href;
+const AUTH_HOME_ROUTE = "/(tabs)/home" as Href;
 const SEX_OPTIONS = [
   { label: "Masculino", value: "M" },
   { label: "Femenino", value: "F" },
@@ -30,9 +33,11 @@ const SEX_OPTIONS = [
 export default function RegisterScreen() {
   const router = useRouter();
   const [isBusy] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // SingUp Logic 
-  const {mutateAsync: SingUp, isSuccess} = useSignupMutation();
+  const {mutateAsync: SingUp} = useSignupMutation();
   const {mutateAsync: CreateAcceso} = useCreateAccesoMutation();
   const {mutateAsync: CreateCliente} = useCreateClienteMutation();
 
@@ -54,10 +59,11 @@ export default function RegisterScreen() {
   })
   const onSubmit = async (data: SignUpCreation) => {
     try{
+      setIsError(false);
       const SignUpResponse = await SingUp ({email: data.email, password: data.password});
-      if(isSuccess) {
-        await saveSessionAuth(SignUpResponse.session.access_token, SignUpResponse.session.refresh_token || "", SignUpResponse.session.user.id);
-      }
+  
+      await saveSessionAuth(SignUpResponse.session.access_token, SignUpResponse.session.refresh_token || "", SignUpResponse.session.user.id);
+      
       await CreateAcceso({
         id: SignUpResponse.session?.user.id || "",
         correo: data.email,
@@ -75,9 +81,15 @@ export default function RegisterScreen() {
         id_acceso: SignUpResponse.session?.user.id || "",
         verificado: false
       })
+      setIsSuccess(true);
+      setTimeout(() => {
+        router.replace(AUTH_HOME_ROUTE);
+        setIsSuccess(false);
+      }, 2000);
     }
     catch (error) {
       console.error("Error en SingUp:", error);
+      setIsError(true);
       return;
     }
   }
@@ -112,6 +124,15 @@ export default function RegisterScreen() {
             <Text style={styles.subtitle}>
               Completa los datos para empezar a usar el sistema.
             </Text>
+
+            <FeedbackError
+              visible={isError}
+              onClose={() => setIsError(false)}
+            />
+            <FeedbackSuccess
+              visible={isSuccess}
+              onClose={() => setIsSuccess(false)}
+            />
 
             <View style={styles.fieldBlock}>
               <Text style={styles.label}>Nombre</Text>

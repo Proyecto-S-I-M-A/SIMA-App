@@ -38,7 +38,7 @@ export default function TabsLayout() {
         options={{
           title: "Historial",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="build" size={20} color={color} />
+            <AntDesign name="history" size={20} color={color} />
           ),
         }}
       />
