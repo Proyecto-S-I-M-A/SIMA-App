@@ -49,7 +49,7 @@
       "reactCompiler": true
     },
     "extra": {
-      "apiUrl": "https://sima-web.onrender.com/api/v1",
+      "API_URL": "https://sima-web.onrender.com/api/v1",
       "router": {},
       "eas": {
         "projectId": "af7af9f1-a885-497c-85f1-8c52f8d0500d"
