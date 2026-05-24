@@ -1,14 +1,12 @@
+import AppHeader from "@/components/AppHeader/Component";
+import RecetaCard from "@/components/RecetaCard/Component";
 import palette from "@/constants/theme";
-import useHome from "@/hooks/useHome";
 import { useGetClientes } from "@/lib/api/QueryCliente";
 import { useGetRecetasYDosisByCedula } from "@/lib/api/QueryReceta";
 import { clearSessionAuth, getSessionId } from "@/lib/GetCookie";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
-  Platform,
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -22,30 +20,27 @@ export default function HomeTab() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [sessionID, setSessionID] = useState<string>("");
   const [refreshing, setRefreshing] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const loadSession = async () => {
         const id = (await getSessionId()) || "";
-        if (isActive) {
-          setSessionID(id);
-        }
+        if (isActive) setSessionID(id);
       };
 
       void loadSession();
-
-      return () => {
-        isActive = false;
-      };
+      return () => { isActive = false; };
     }, []),
   );
+
   const { data: cliente } = useGetClientes(sessionID, Boolean(sessionID));
   const { data, refetch } = useGetRecetasYDosisByCedula(
     cliente?.cedula || "",
     Boolean(cliente?.cedula),
   );
-  const { CantidadActiva, CantidadRetirada, CantidadReceta } = useHome(data);
+  const recetasPendientes = data?.filter((r) => r.estado === "Pendiente") ?? [];
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -63,39 +58,11 @@ export default function HomeTab() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}></Text>
-        <View style={styles.profileMenuWrap}>
-          <Pressable
-            onPress={() => setMenuOpen((prev) => !prev)}
-            style={({ pressed }) => [
-              styles.profileButton,
-              pressed && styles.profileButtonPressed,
-            ]}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel="Perfil"
-          >
-            <MaterialIcons name="person" size={22} color={palette.c900} />
-          </Pressable>
-          {menuOpen ? (
-            <View style={styles.tooltip}>
-              <Pressable
-                onPress={handleLogout}
-                style={({ pressed }) => [
-                  styles.logoutButton,
-                  pressed && styles.logoutButtonPressed,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel="Cerrar sesión"
-              >
-                <MaterialIcons name="logout" size={18} color={palette.c900} />
-                <Text style={styles.logoutText}>Cerrar sesión</Text>
-              </Pressable>
-            </View>
-          ) : null}
-        </View>
-      </View>
+      <AppHeader
+        menuOpen={menuOpen}
+        onMenuToggle={() => setMenuOpen((prev) => !prev)}
+        onLogout={handleLogout}
+      />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
@@ -105,9 +72,40 @@ export default function HomeTab() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Text style={{ fontSize: 18, fontWeight: "600", color: palette.c900 }}>
-          Bienvenido, {cliente?.nombre || "Usuario"}
-        </Text>
+        {/* Saludo */}
+        <View style={styles.greetingBlock}>
+          <Text style={styles.greetingLabel}>Bienvenido</Text>
+          <Text style={styles.greetingName}>
+            {cliente?.nombre ?? "Usuario"}
+          </Text>
+        </View>
+
+        {/* Recetas pendientes */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recetas pendientes</Text>
+          <View style={styles.sectionBadge}>
+            <Text style={styles.sectionBadgeText}>{recetasPendientes.length}</Text>
+          </View>
+        </View>
+
+        {recetasPendientes.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No tienes recetas pendientes</Text>
+          </View>
+        ) : (
+          recetasPendientes.map((receta) => (
+            <RecetaCard
+              key={receta.id}
+              RecetaID={receta.id}
+              DoctorRemitente={receta.doctor_remitente || ""}
+              Paciente={cliente?.nombre + " " + cliente?.apellido}
+              FechaEmision={receta.createdAt}
+              Dosis={receta.dosis}
+              FechaExpiracion={receta.fecha}
+              RecetaEstado={receta.estado || ""}
+            />
+          ))
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -118,95 +116,62 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: palette.c50,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 18,
-    paddingTop: 8,
-    paddingBottom: 12,
-    backgroundColor: palette.c50Translucent,
-    position: "relative",
-    overflow: "visible",
-    zIndex: 10,
-  },
   scrollView: {
     zIndex: 0,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: palette.c900,
   },
   content: {
     paddingHorizontal: 18,
     paddingVertical: 18,
-    gap: 16,
+    gap: 14,
   },
-  profileMenuWrap: {
-    position: "relative",
-    zIndex: 12,
-    elevation: 12,
+  greetingBlock: {
+    gap: 2,
+    marginBottom: 4,
   },
-  profileButton: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: palette.white,
-    borderWidth: 1,
-    borderColor: palette.c100,
-    alignItems: "center",
-    justifyContent: "center",
-    ...Platform.select({
-      ios: {
-        shadowColor: palette.c900,
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
-        shadowOffset: { width: 0, height: 2 },
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
+  greetingLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: palette.c500,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
   },
-  profileButtonPressed: {
-    transform: [{ scale: 0.98 }],
+  greetingName: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: palette.c900,
   },
-  tooltip: {
-    position: "absolute",
-    right: 0,
-    top: 46,
-    width: 160,
-    backgroundColor: palette.white,
-    borderWidth: 1,
-    borderColor: palette.c100,
-    borderRadius: 12,
-    padding: 8,
-    zIndex: 15,
-    elevation: 15,
-    ...Platform.select({
-      ios: {
-        shadowColor: palette.c900,
-        shadowOpacity: 0.14,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 6 },
-      },
-    }),
-  },
-  logoutButton: {
+  sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 10,
   },
-  logoutButtonPressed: {
-    backgroundColor: palette.c100,
-  },
-  logoutText: {
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: "700",
     color: palette.c900,
+  },
+  sectionBadge: {
+    backgroundColor: palette.pendingBg,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  sectionBadgeText: {
+    fontSize: 12,
+    fontWeight: "800",
+    color: palette.pendingText,
+  },
+  emptyState: {
+    backgroundColor: palette.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: palette.c100,
+    padding: 24,
+    alignItems: "center",
+  },
+  emptyText: {
     fontSize: 14,
+    color: palette.c500,
     fontWeight: "600",
   },
 });
