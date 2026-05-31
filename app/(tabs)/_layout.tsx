@@ -42,6 +42,15 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="ubicacion/ubicacion"
+        options={{
+          title: "Ubicación",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="environment" size={20} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
