@@ -1,26 +1,14 @@
 import AppHeader from "@/components/AppHeader/Component";
+import MaquinaSelect from "@/components/MaquinaSelect/Component";
 import palette from "@/constants/theme";
 import { useGetAllMaquinas } from "@/lib/api/QueryMaquina";
 import { clearSessionAuth } from "@/lib/GetCookie";
 import type { Maquina } from "@/types/Maquina";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-
-function getMachineLabel(m: Maquina): string {
-  return m.ubicacion || `Máquina #${m.id}`;
-}
 
 function buildMapHtml(maquinas: Maquina[]): string {
   const validMachines = maquinas.filter(
@@ -109,7 +97,6 @@ function buildMapHtml(maquinas: Maquina[]): string {
 export default function UbicacionTab() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const webViewRef = useRef<WebView>(null);
 
@@ -127,24 +114,14 @@ export default function UbicacionTab() {
   const validMachines =
     maquinas?.filter((m) => m.latitud !== null && m.longitud !== null) ?? [];
 
-  const selectedMachine =
-    validMachines.find((m) => m.id === selectedId) ?? null;
-
   const handleSelectMachine = (id: number | null) => {
     setSelectedId(id);
-    setDropdownOpen(false);
     if (id === null) {
       webViewRef.current?.injectJavaScript("window.resetView(); true;");
     } else {
-      webViewRef.current?.injectJavaScript(
-        `window.flyToMachine(${id}); true;`
-      );
+      webViewRef.current?.injectJavaScript(`window.flyToMachine(${id}); true;`);
     }
   };
-
-  const selectLabel = selectedMachine
-    ? getMachineLabel(selectedMachine)
-    : `Todas las máquinas (${validMachines.length})`;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -180,34 +157,11 @@ export default function UbicacionTab() {
 
       {!isLoading && !isError && maquinas && validMachines.length > 0 && (
         <>
-          {/* Machine selector */}
-          <View style={styles.selectorBar}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.selectorButton,
-                pressed && styles.selectorButtonPressed,
-              ]}
-              onPress={() => setDropdownOpen(true)}
-            >
-              <AntDesign
-                name="environment"
-                size={16}
-                color={selectedMachine ? palette.c900 : palette.c500}
-                style={styles.selectorIcon}
-              />
-              <Text
-                style={[
-                  styles.selectorLabel,
-                  selectedMachine && styles.selectorLabelSelected,
-                ]}
-                numberOfLines={1}
-              >
-                {selectLabel}
-              </Text>
-              <AntDesign name="down" size={12} color={palette.c500} />
-            </Pressable>
-          </View>
-
+          <MaquinaSelect
+            maquinas={validMachines}
+            selectedId={selectedId}
+            onSelect={handleSelectMachine}
+          />
           <WebView
             ref={webViewRef}
             style={styles.map}
@@ -222,81 +176,6 @@ export default function UbicacionTab() {
               </View>
             )}
           />
-
-          {/* Dropdown modal */}
-          <Modal
-            visible={dropdownOpen}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setDropdownOpen(false)}
-          >
-            <Pressable
-              style={styles.modalOverlay}
-              onPress={() => setDropdownOpen(false)}
-            >
-              <View style={styles.dropdownMenu}>
-                <Text style={styles.dropdownTitle}>Seleccionar máquina</Text>
-
-                <FlatList
-                  data={[{ id: null } as { id: number | null }, ...validMachines]}
-                  keyExtractor={(item) =>
-                    item.id === null ? "all" : String(item.id)
-                  }
-                  renderItem={({ item }) => {
-                    const isAll = item.id === null;
-                    const machine = isAll
-                      ? null
-                      : (item as Maquina);
-                    const isSelected = selectedId === item.id;
-                    return (
-                      <Pressable
-                        style={({ pressed }) => [
-                          styles.dropdownItem,
-                          isSelected && styles.dropdownItemSelected,
-                          pressed && styles.dropdownItemPressed,
-                        ]}
-                        onPress={() => handleSelectMachine(item.id)}
-                      >
-                        <AntDesign
-                          name="environment"
-                          size={15}
-                          color={isSelected ? palette.c900 : palette.c500}
-                        />
-                        <View style={styles.dropdownItemContent}>
-                          <Text
-                            style={[
-                              styles.dropdownItemLabel,
-                              isSelected && styles.dropdownItemLabelSelected,
-                            ]}
-                            numberOfLines={1}
-                          >
-                            {isAll
-                              ? "Todas las máquinas"
-                              : getMachineLabel(machine!)}
-                          </Text>
-                          {!isAll && machine && (
-                            <Text
-                              style={[
-                                styles.dropdownItemStatus,
-                                machine.activo
-                                  ? styles.statusActive
-                                  : styles.statusInactive,
-                              ]}
-                            >
-                              {machine.activo ? "Activa" : "Inactiva"}
-                            </Text>
-                          )}
-                        </View>
-                        {isSelected && (
-                          <AntDesign name="check" size={15} color={palette.c900} />
-                        )}
-                      </Pressable>
-                    );
-                  }}
-                />
-              </View>
-            </Pressable>
-          </Modal>
         </>
       )}
     </SafeAreaView>
@@ -334,105 +213,5 @@ const styles = StyleSheet.create({
     color: palette.c500,
     fontWeight: "600",
     textAlign: "center",
-  },
-  selectorBar: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    backgroundColor: palette.c50,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.c200,
-  },
-  selectorButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: palette.white,
-    borderWidth: 1,
-    borderColor: palette.c200,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
-  },
-  selectorButtonPressed: {
-    backgroundColor: palette.c100,
-  },
-  selectorIcon: {
-    flexShrink: 0,
-  },
-  selectorLabel: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: "500",
-    color: palette.c500,
-  },
-  selectorLabelSelected: {
-    color: palette.c900,
-    fontWeight: "700",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "flex-end",
-  },
-  dropdownMenu: {
-    backgroundColor: palette.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 16,
-    paddingBottom: 24,
-    maxHeight: "60%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  dropdownTitle: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: palette.c500,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    paddingHorizontal: 18,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: palette.c100,
-    marginBottom: 4,
-  },
-  dropdownItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 13,
-    gap: 12,
-  },
-  dropdownItemSelected: {
-    backgroundColor: palette.c50,
-  },
-  dropdownItemPressed: {
-    backgroundColor: palette.c100,
-  },
-  dropdownItemContent: {
-    flex: 1,
-    gap: 2,
-  },
-  dropdownItemLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: palette.c700,
-  },
-  dropdownItemLabelSelected: {
-    fontWeight: "700",
-    color: palette.c900,
-  },
-  dropdownItemStatus: {
-    fontSize: 11,
-    fontWeight: "700",
-  },
-  statusActive: {
-    color: "#065F46",
-  },
-  statusInactive: {
-    color: palette.c500,
   },
 });
