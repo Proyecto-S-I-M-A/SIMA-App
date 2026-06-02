@@ -1,6 +1,7 @@
 import type { MaquinaInventario, MaquinaInventarioCreation, MaquinaInventarioUpdate } from '@/types/Inventario';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiJson } from '../apiClient';
+import { ENDPOINTS } from './endpoints';
 
 export interface InventarioMaquinaItem {
   id: number;
@@ -21,7 +22,7 @@ export const useCreateMaquinaInventarioMutation = () => {
 
   return useMutation({
     mutationFn: async (form: MaquinaInventarioCreation): Promise<MaquinaInventario> => {
-      return apiJson<MaquinaInventario>('/maquina-inventario', {
+      return apiJson<MaquinaInventario>(ENDPOINTS.maquinaInventario.base, {
         method: 'POST',
         body: form,
         auth: true,
@@ -38,7 +39,7 @@ export const useUpdateMaquinaInventarioMutation = () => {
 
   return useMutation({
     mutationFn: async ({ id, body }: { id: number; body: MaquinaInventarioUpdate }) => {
-      return apiJson<MaquinaInventario>(`/maquina-inventario/${id}`, {
+      return apiJson<MaquinaInventario>(ENDPOINTS.maquinaInventario.byId(id), {
         method: 'PUT',
         body,
         auth: true,
@@ -54,7 +55,7 @@ export const useGetMaquinaInventarios = (id: string, enabled: boolean = true) =>
   return useQuery({
     queryKey: ['maquina-inventario', id],
     queryFn: async (): Promise<MaquinaInventario[]> => {
-      return apiJson<MaquinaInventario[]>(`/maquina-inventario/${id}`, {
+      return apiJson<MaquinaInventario[]>(ENDPOINTS.maquinaInventario.byId(id), {
         method: 'GET',
         auth: true,
       });
@@ -67,7 +68,7 @@ export const useGetMaquinaInventariosByMaquina = (id_maquina: number | null, ena
   return useQuery({
     queryKey: ['maquina-inventario-by-maquina', id_maquina],
     queryFn: async (): Promise<MaquinaInventario[]> => {
-      return apiJson<MaquinaInventario[]>(`/maquina-inventario/maquina/${id_maquina}`, {
+      return apiJson<MaquinaInventario[]>(ENDPOINTS.maquinaInventario.byMaquina(id_maquina!), {
         method: 'GET',
         auth: true,
       });
@@ -80,7 +81,7 @@ export const useGetInventarioMaquina = (id_maquina: number | null, enabled: bool
   return useQuery({
     queryKey: ['inventario-maquina', id_maquina],
     queryFn: async (): Promise<InventarioMaquinaItem[]> => {
-      return apiJson<InventarioMaquinaItem[]>(`/maquina-inventario/inventario-maquina/${id_maquina}`, {
+      return apiJson<InventarioMaquinaItem[]>(ENDPOINTS.maquinaInventario.inventarioMaquina(id_maquina!), {
         method: 'GET',
         auth: true,
       });
@@ -93,7 +94,7 @@ export const useGetMaquinaInventariosByInventario = (id_inventario: number | nul
   return useQuery({
     queryKey: ['maquina-inventario-by-inventario', id_inventario],
     queryFn: async (): Promise<MaquinaInventario[]> => {
-      return apiJson<MaquinaInventario[]>(`/maquina-inventario/inventario/${id_inventario}`, {
+      return apiJson<MaquinaInventario[]>(ENDPOINTS.maquinaInventario.byInventario(id_inventario!), {
         method: 'GET',
         auth: true,
       });
@@ -107,7 +108,7 @@ export const useDeleteMaquinaInventarioMutation = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      return apiJson<{ message: string }>(`/maquina-inventario/${id}`, {
+      return apiJson<{ message: string }>(ENDPOINTS.maquinaInventario.byId(id), {
         method: 'DELETE',
         auth: true,
       });
