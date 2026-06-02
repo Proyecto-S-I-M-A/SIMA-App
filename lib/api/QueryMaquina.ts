@@ -48,3 +48,16 @@ export const useGetMaquinas = (id: string, enabled: boolean = true) => {
     enabled,
   });
 };
+
+export const useGetAllMaquinas = (enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['maquinas'],
+    queryFn: async (): Promise<Maquina[]> => {
+      return apiJson<Maquina[]>('/maquinas/all', {
+        method: 'GET',
+        auth: true,
+      });
+    },
+    enabled,
+  });
+};
