@@ -117,11 +117,7 @@ export async function apiJson<T>(path: string, options: ApiFetchOptions = {}): P
       throw new Error("No se recibieron tokens validos al renovar la sesion");
     }
 
-    await saveSessionAuth({
-      accessToken: refreshedAccessToken,
-      refreshToken: refreshedRefreshToken,
-      sessionId: refreshedSessionId,
-    });
+    await saveSessionAuth(refreshedAccessToken, refreshedRefreshToken, refreshedSessionId || "");
 
     return apiJson(path, {
       ...options,

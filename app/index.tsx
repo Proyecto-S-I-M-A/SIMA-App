@@ -1,5 +1,10 @@
 import palette from "@/constants/theme";
-import { getAccessToken, getRefreshToken, getSessionId, saveSessionAuth } from "@/lib/GetCookie";
+import {
+  getAccessToken,
+  getRefreshToken,
+  getSessionId,
+  saveSessionAuth,
+} from "@/lib/GetCookie";
 import { useLoginMutation } from "@/lib/Query";
 import { LoginSchema, type LoginData } from "@/types/Login";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +16,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -19,6 +25,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AUTH_HOME_ROUTE = "/(tabs)/home" as Href;
+const REGISTER_ROUTE = "/register" as Href;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -44,7 +51,7 @@ export default function LoginScreen() {
     }
     void logTokens();
   });
- // Efecto para restaurar sesión al iniciar la app
+  // Efecto para restaurar sesión al iniciar la app
   useEffect(() => {
     const restoreSession = async () => {
       const token = await getAccessToken();
@@ -57,22 +64,22 @@ export default function LoginScreen() {
     void restoreSession();
   }, [router]);
 
-  const isBusy = useMemo(() => isSubmitting || loginMutation.isPending || booting, [isSubmitting, loginMutation.isPending, booting]);
+  const isBusy = useMemo(
+    () => isSubmitting || loginMutation.isPending || booting,
+    [isSubmitting, loginMutation.isPending, booting],
+  );
 
   const onSubmit = async (values: LoginData) => {
     const response = await loginMutation.mutateAsync(values);
     const accessToken = response.session?.access_token;
-    const refreshToken = response.session?.refresh_token ?? response.session?.token_refresh;
-    const sessionId = response.session?.user.id ?? ""
+    const refreshToken =
+      response.session?.refresh_token ?? response.session?.token_refresh;
+    const sessionId = response.session?.user.id ?? "";
     if (!accessToken || !refreshToken) {
       throw new Error("La API no devolvio tokens validos");
     }
 
-    await saveSessionAuth({
-      accessToken,
-      refreshToken,
-      sessionId,
-    });
+    await saveSessionAuth(accessToken, refreshToken, sessionId);
 
     router.replace(AUTH_HOME_ROUTE);
   };
@@ -81,64 +88,104 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.bgOrbTop} />
       <View style={styles.bgOrbBottom} />
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.caption}>Sistema Inteligente Medicacion Asistida</Text>
-          <Text style={styles.title}>Inicia sesion</Text>
-          <Text style={styles.subtitle}>Accede con tu correo y contrasena para administrar tu operacion.</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.card}>
+            <Text style={styles.caption}>
+              Sistema Inteligente Medicacion Asistida
+            </Text>
+            <Text style={styles.title}>Inicia sesion</Text>
+            <Text style={styles.subtitle}>
+              Accede con tu correo y contrasena para administrar tu operacion.
+            </Text>
 
-          <View style={styles.fieldBlock}>
-            <Text style={styles.label}>Correo</Text>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onBlur, onChange, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  placeholder="usuario@empresa.com"
-                  placeholderTextColor={palette.c700}
-                />
+            <View style={styles.fieldBlock}>
+              <Text style={styles.label}>Correo</Text>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="usuario@empresa.com"
+                    placeholderTextColor={palette.c700}
+                  />
+                )}
+              />
+              {errors.email ? (
+                <Text style={styles.errorText}>{errors.email.message}</Text>
+              ) : null}
+            </View>
+
+            <View style={styles.fieldBlock}>
+              <Text style={styles.label}>Contrasena</Text>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    secureTextEntry
+                    placeholder="Minimo 6 caracteres"
+                    placeholderTextColor={palette.c700}
+                  />
+                )}
+              />
+              {errors.password ? (
+                <Text style={styles.errorText}>{errors.password.message}</Text>
+              ) : null}
+            </View>
+
+            {loginMutation.error ? (
+              <Text style={styles.errorText}>
+                {loginMutation.error.message}
+              </Text>
+            ) : null}
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.loginButton,
+                pressed && styles.loginButtonPressed,
+                isBusy && styles.loginButtonDisabled,
+              ]}
+              disabled={isBusy}
+              onPress={handleSubmit(onSubmit)}
+            >
+              {isBusy ? (
+                <ActivityIndicator color={palette.white} />
+              ) : (
+                <Text style={styles.loginButtonText}>Entrar</Text>
               )}
-            />
-            {errors.email ? <Text style={styles.errorText}>{errors.email.message}</Text> : null}
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.registerButton,
+                pressed && styles.registerButtonPressed,
+              ]}
+              onPress={() => router.push(REGISTER_ROUTE)}
+            >
+              <Text style={styles.registerButtonText}>Crear cuenta</Text>
+            </Pressable>
           </View>
-
-          <View style={styles.fieldBlock}>
-            <Text style={styles.label}>Contrasena</Text>
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onBlur, onChange, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  secureTextEntry
-                  placeholder="Minimo 6 caracteres"
-                  placeholderTextColor={palette.c700}
-                />
-              )}
-            />
-            {errors.password ? <Text style={styles.errorText}>{errors.password.message}</Text> : null}
-          </View>
-
-          {loginMutation.error ? <Text style={styles.errorText}>{loginMutation.error.message}</Text> : null}
-
-          <Pressable
-            style={({ pressed }) => [styles.loginButton, pressed && styles.loginButtonPressed, isBusy && styles.loginButtonDisabled]}
-            disabled={isBusy}
-            onPress={handleSubmit(onSubmit)}
-          >
-            {isBusy ? <ActivityIndicator color={palette.white} /> : <Text style={styles.loginButtonText}>Entrar</Text>}
-          </Pressable>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -152,7 +199,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
     paddingHorizontal: 22,
+    paddingVertical: 24,
   },
   bgOrbTop: {
     position: "absolute",
@@ -243,5 +295,19 @@ const styles = StyleSheet.create({
     color: palette.white,
     fontWeight: "800",
     fontSize: 16,
+  },
+  registerButton: {
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: palette.c300,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  registerButtonPressed: {
+    backgroundColor: palette.c50,
+  },
+  registerButtonText: {
+    color: palette.c700,
+    fontWeight: "700",
   },
 });

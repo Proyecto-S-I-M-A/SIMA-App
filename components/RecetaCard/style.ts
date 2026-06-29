@@ -1,82 +1,118 @@
 import palette from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
-
-const style = StyleSheet.create({
-    recipeCard: {
+const styles = StyleSheet.create({
+  card: {
     backgroundColor: palette.white,
-    borderRadius: 24,
-    padding: 18,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: palette.c100,
-    shadowColor: "#1C3549",
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
+    overflow: "hidden",
+    shadowColor: palette.c900,
+    shadowOpacity: 0.07,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
     elevation: 3,
-    gap: 14,
   },
-  recipeCardTop: {
+  accentBar: {
+    height: 4,
+    width: "100%",
+  },
+  accentPending: { backgroundColor: palette.pendingAccent },
+  accentActive: { backgroundColor: palette.activeAccent },
+  accentRetirada: { backgroundColor: palette.retiredAccent },
+
+  cardInner: {
+    padding: 16,
+    gap: 12,
+  },
+
+  // Header
+  headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: 12,
+    alignItems: "center",
   },
-  recipeCode: {
-    fontSize: 14,
-    fontWeight: "800",
+  recetaCode: {
+    fontSize: 11,
+    fontWeight: "700",
     color: palette.c500,
-    marginBottom: 4,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
   },
-  recipeDoctor: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: palette.c900,
-  },
-  statusChipActive: {
-    backgroundColor: "#DDF1EA",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-  statusChipPending: {
-    backgroundColor: "#F8E3CC",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-  statusChipRetirada: {
-    backgroundColor: "#FBE7DE",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-  statusChipText: {
-    fontSize: 12,
-    fontWeight: "800",
-    color: palette.c900,
-  },
-  metaGrid: {
+
+  // Status chip
+  statusChip: {
     flexDirection: "row",
-    gap: 12,
+    alignItems: "center",
+    gap: 5,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
-  metaItem: {
+  statusChipPending: { backgroundColor: palette.pendingBg },
+  statusChipActive: { backgroundColor: palette.activeBg },
+  statusChipRetirada: { backgroundColor: palette.retiredBg },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statusDotPending: { backgroundColor: palette.pendingAccent },
+  statusDotActive: { backgroundColor: palette.activeAccent },
+  statusDotRetirada: { backgroundColor: palette.retiredAccent },
+  statusText: {
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.3,
+  },
+  statusTextPending: { color: palette.pendingText },
+  statusTextActive: { color: palette.activeText },
+  statusTextRetirada: { color: palette.retiredText },
+
+  // Doctor y paciente
+  doctorName: {
+    fontSize: 17,
+    fontWeight: "800",
+    color: palette.c900,
+    marginTop: -4,
+  },
+  patientName: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: palette.c700,
+    marginTop: -6,
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: palette.c100,
+  },
+
+  // Fechas
+  datesRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  dateItem: {
     flex: 1,
     backgroundColor: palette.c50,
-    borderRadius: 16,
-    padding: 12,
+    borderRadius: 12,
+    padding: 10,
+    gap: 3,
   },
-  metaLabel: {
-    fontSize: 12,
+  dateLabel: {
+    fontSize: 11,
     fontWeight: "700",
-    color: palette.c700,
-    marginBottom: 6,
+    color: palette.c500,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
   },
-  metaValue: {
-    fontSize: 14,
+  dateValue: {
+    fontSize: 13,
     fontWeight: "700",
     color: palette.c900,
   },
-})
+});
 
-export default style;
+export default styles;

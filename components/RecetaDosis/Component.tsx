@@ -19,24 +19,29 @@ export default function RecetaDosis({ dosis }: RecetaDosisProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dosis indicada</Text>
-      {dosis.map((item) => (
-        <View key={item.id} style={styles.item}>
-          <View style={styles.row}>
-            <View style={styles.tagPrimary}>
-              <Text style={styles.tagLabel}>Medicamento</Text>
-              <Text style={styles.tagValue}>
-                {item.inventario?.nombre_medicamento || "-"}
-              </Text>
+      {dosis.map((item, index) => (
+        <View key={item.id} style={styles.itemCard}>
+          {/* Número + medicamento + cantidad */}
+          <View style={styles.itemHeader}>
+            <View style={styles.indexBadge}>
+              <Text style={styles.indexBadgeText}>{index + 1}</Text>
             </View>
-            <View style={styles.tagSoft}>
-              <Text style={styles.tagLabel}>Cantidad</Text>
-              <Text style={styles.tagValue}>
-                {item.cantidad ?? "-"}
+            <Text style={styles.medicamentoName} numberOfLines={2}>
+              {item.inventario?.nombre_medicamento || "—"}
+            </Text>
+            <View style={styles.cantidadChip}>
+              <Text style={styles.cantidadText}>
+                ×{item.cantidad ?? "—"}
               </Text>
             </View>
           </View>
+
+          {/* Instrucciones */}
           {item.instrucciones ? (
-            <Text style={styles.instructions}>{item.instrucciones}</Text>
+            <View style={styles.instructionsBlock}>
+              <Text style={styles.instructionsLabel}>Instrucciones</Text>
+              <Text style={styles.instructionsText}>{item.instrucciones}</Text>
+            </View>
           ) : null}
         </View>
       ))}

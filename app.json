@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "farmaexpress",
-    "slug": "farmaexpress",
+    "name": "AppSima",
+    "slug": "AppSima",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "farmaexpress",
+    "scheme": "appsima",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,15 +18,18 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.n0och1.AppSima",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "expo-dev-client",
       "expo-router",
+      "expo-font",
       [
         "expo-splash-screen",
         {
@@ -39,14 +42,28 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-system-ui",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#1A73E8",
+          "defaultChannel": "default",
+          "androidMode": "default"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
     "extra": {
-      "apiUrl": "https://sima-web.onrender.com/api/v1"
+      "API_URL": "https://sima-web.onrender.com/api/v1",
+      "router": {},
+      "eas": {
+        "projectId": "af7af9f1-a885-497c-85f1-8c52f8d0500d"
+      }
     }
   }
 }

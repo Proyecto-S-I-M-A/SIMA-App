@@ -1,6 +1,7 @@
 import { apiJson } from "@/lib/apiClient";
 import type { ClienteCreation } from "@/types/Cliente";
 import type { LoginData, LoginResponseData } from "@/types/Login";
+import { SignUpResponseData } from "@/types/SingUp";
 import type { UsuarioCreation } from "@/types/Usuario";
 import { useMutation } from "@tanstack/react-query";
 
@@ -17,8 +18,8 @@ export const useLoginMutation = () => {
 
 export const useSignupMutation = () => {
   return useMutation({
-    mutationFn: async (form: LoginData): Promise<LoginResponseData> => {
-      return apiJson<LoginResponseData>("/auth/signup", {
+    mutationFn: async (form: LoginData): Promise<SignUpResponseData> => {
+      return apiJson<SignUpResponseData>("/auth/signup", {
         method: "POST",
         body: form,
       });

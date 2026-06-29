@@ -11,6 +11,7 @@ export const ClienteSchema = z.object({
   verificado: z.boolean(),
   sexo: z.string().nullable(),
   id_acceso: z.string(),
+  push_token: z.string().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

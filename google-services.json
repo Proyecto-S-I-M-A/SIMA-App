@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582685873515",
+    "project_id": "sima-project-ddbeb",
+    "storage_bucket": "sima-project-ddbeb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582685873515:android:b2375b01692e61b2fea82e",
+        "android_client_info": {
+          "package_name": "com.n0och1.AppSima"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmQy0LW6PKaV8IZSjh-fu3WajWGFGEjU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

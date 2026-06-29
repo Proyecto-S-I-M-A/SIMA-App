@@ -1,13 +1,14 @@
 import type { Inventario, InventarioCreation, InventarioUpdate } from '@/types/Inventario';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiJson } from '../apiClient';
+import { ENDPOINTS } from './endpoints';
 
 export const useCreateInventarioMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (form: InventarioCreation): Promise<Inventario> => {
-      return apiJson<Inventario>('/inventario', {
+      return apiJson<Inventario>(ENDPOINTS.inventario.base, {
         method: 'POST',
         body: form,
         auth: true,
@@ -24,7 +25,7 @@ export const useUpdateInventarioMutation = () => {
 
   return useMutation({
     mutationFn: async ({ id, body }: { id: number; body: InventarioUpdate }) => {
-      return apiJson<Inventario>(`/inventario/${id}`, {
+      return apiJson<Inventario>(ENDPOINTS.inventario.byId(id), {
         method: 'PUT',
         body,
         auth: true,
@@ -40,7 +41,7 @@ export const useGetInventarios = (id: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ['inventarios', id],
     queryFn: async (): Promise<Inventario[]> => {
-      return apiJson<Inventario[]>(`/inventario/${id}`, {
+      return apiJson<Inventario[]>(ENDPOINTS.inventario.byId(id), {
         method: 'GET',
         auth: true,
       });
@@ -53,7 +54,7 @@ export const useGetInventario = (id: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ['inventario', id],
     queryFn: async (): Promise<Inventario[]> => {
-      return apiJson<Inventario[]>(`/inventario/all`, {
+      return apiJson<Inventario[]>(ENDPOINTS.inventario.all, {
         method: 'GET',
         auth: true,
       });

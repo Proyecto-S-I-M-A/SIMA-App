@@ -1,12 +1,13 @@
 import type { Usuario, UsuarioUpdate } from "@/types/Usuario";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiJson } from "../apiClient";
+import { ENDPOINTS } from "./endpoints";
 
 export const useUpdateUsuarioMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, body }: { id: number; body: UsuarioUpdate }) => {
-      return apiJson<{ message: string }>(`/usuarios/${id}`, {
+      return apiJson<{ message: string }>(ENDPOINTS.usuarios.byId(id), {
         method: "PUT",
         body,
         auth: true,
@@ -22,7 +23,7 @@ export const useGetUsuarios = (id: string, enabled: boolean = true) => {
   const query = useQuery({
     queryKey: ["usuarios", id],
     queryFn: async (): Promise<Usuario[]> => {
-      return apiJson<Usuario[]>(`/usuarios/${id}`, {
+      return apiJson<Usuario[]>(ENDPOINTS.usuarios.byId(id), {
         method: "GET",
         auth: true,
       });
@@ -36,7 +37,7 @@ export const useGetUsuario = (id_acceso: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["usuario", id_acceso],
     queryFn: async (): Promise<Usuario[]> => {
-      return apiJson<Usuario[]>(`/usuarios/acceso/${id_acceso}`, {
+      return apiJson<Usuario[]>(ENDPOINTS.usuarios.byAcceso(id_acceso), {
         method: "GET",
         auth: true,
       });

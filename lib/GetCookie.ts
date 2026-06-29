@@ -75,12 +75,12 @@ type SaveSessionParams = {
   sessionId?: string | null;
 };
 
-export async function saveSessionAuth({ accessToken, refreshToken, sessionId }: SaveSessionParams): Promise<void> {
+export async function saveSessionAuth(access_token: string, refresh_token: string, id: string): Promise<void> {
   await Promise.all([
-    setStoredValue(ACCESS_TOKEN_KEY, accessToken),
-    setStoredValue(REFRESH_TOKEN_KEY, refreshToken),
-    setStoredValue(LEGACY_REFRESH_TOKEN_KEY, refreshToken),
-    sessionId ? setStoredValue(SESSION_ID_KEY, sessionId) : Promise.resolve(),
+    setStoredValue(ACCESS_TOKEN_KEY, access_token),
+    setStoredValue(REFRESH_TOKEN_KEY, refresh_token),
+    setStoredValue(LEGACY_REFRESH_TOKEN_KEY, refresh_token),
+    id ? setStoredValue(SESSION_ID_KEY, id) : Promise.resolve(),
   ]);
 }
 
