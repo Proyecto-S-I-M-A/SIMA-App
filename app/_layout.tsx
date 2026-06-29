@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+// Registers expo-notifications foreground handler at app startup
+import "@/lib/notifications/NotificationService";
 
 const queryClient = new QueryClient();
 

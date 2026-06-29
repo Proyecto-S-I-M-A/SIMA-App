@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.n0och1.AppSima"
+      "package": "com.n0och1.AppSima",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -42,7 +43,16 @@
         }
       ],
       "expo-secure-store",
-      "expo-system-ui"
+      "expo-system-ui",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#1A73E8",
+          "defaultChannel": "default",
+          "androidMode": "default"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

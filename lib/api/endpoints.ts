@@ -48,4 +48,9 @@ export const ENDPOINTS = {
     byId: (id: string | number) => `/usuarios/${id}`,
     byAcceso: (id_acceso: string) => `/usuarios/acceso/${id_acceso}`,
   },
+
+  notifications: {
+    registerToken: '/notifications/register-token',
+    send: '/notifications/send',
+  },
 } as const;
